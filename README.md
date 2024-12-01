@@ -1,8 +1,6 @@
-# Solutions for Advent of Code
+# Advent of Code
 
-## WIP
-
-This will be a collection of all years combined in one repository in the future
+This repository contains my solutions for the [Advent of Code](https://adventofcode.com/) puzzles.
 
 ### Languages
 
