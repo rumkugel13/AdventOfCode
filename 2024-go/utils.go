@@ -112,6 +112,16 @@ func CommaSepToIntArr(line string) []int {
 	return result
 }
 
+func SpaceSepToIntArr(line string) []int {
+	data := strings.Fields(line)
+	result := make([]int, len(data))
+	for i, val := range data {
+		num, _ := strconv.Atoi(strings.TrimSpace(val))
+		result[i] = num
+	}
+	return result
+}
+
 func GCD(a, b int) int {
 	for b != 0 {
 		a, b = b, a%b
