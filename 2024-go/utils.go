@@ -23,6 +23,14 @@ func ReadLines(file string) []string {
 	return strings.Split(strings.ReplaceAll(string(data), "\r\n", "\n"), "\n")
 }
 
+func ReadLine(file string) string {
+	data, err := os.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+	return strings.ReplaceAll(string(data), "\r\n", "\n")
+}
+
 func Reverse(s string) string {
 	r := []rune(s)
 	for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
