@@ -130,6 +130,16 @@ func SpaceSepToIntArr(line string) []int {
 	return result
 }
 
+func SepToIntArr(line, sep string) []int {
+	data := strings.Split(line, sep)
+	result := make([]int, len(data))
+	for i, val := range data {
+		num, _ := strconv.Atoi(strings.TrimSpace(val))
+		result[i] = num
+	}
+	return result
+}
+
 func GCD(a, b int) int {
 	for b != 0 {
 		a, b = b, a%b
