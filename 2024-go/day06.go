@@ -23,14 +23,9 @@ func day06() {
 	fmt.Println("Day 06 Part 01:", len(path))
 
 	count := 0
-	for r, row := range input {
-		for c, ch := range row {
-			if ch == '.' {
-				obstacle := Point{r, c}
-				if day06_is_loop(input, start, obstacle, dir) {
-					count++
-				}
-			}
+	for obstacle := range path {
+		if day06_is_loop(input, start, obstacle, dir) {
+			count++
 		}
 	}
 
