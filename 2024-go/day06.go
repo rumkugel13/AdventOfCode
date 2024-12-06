@@ -33,18 +33,23 @@ func day06() {
 }
 
 func day06_is_loop(input []string, point, obstacle Point, dir Point) bool {
-	visited := map[Point]int{point: 0}
+	type visitor struct {
+		point Point
+		dir   Point
+	}
+
+	visited := map[visitor]bool{{point, dir}: false}
 	for {
 		next := point.Add(dir)
 		if !InsideGrid(input, next) {
 			break
 		}
+		if _, v := visited[visitor{next, dir}]; v {
+			return true
+		}
 		if input[next.row][next.col] != '#' && next != obstacle {
-			if visited[next] > 4 {
-				return true
-			}
 			point = next
-			visited[point]++
+			visited[visitor{point, dir}] = true
 		} else {
 			dir.TurnRight()
 		}
@@ -52,8 +57,8 @@ func day06_is_loop(input []string, point, obstacle Point, dir Point) bool {
 	return false
 }
 
-func day06_get_path(input []string, point Point, dir Point) map[Point]int {
-	visited := map[Point]int{point: 0}
+func day06_get_path(input []string, point Point, dir Point) map[Point]bool {
+	visited := map[Point]bool{point: false}
 	for {
 		next := point.Add(dir)
 		if !InsideGrid(input, next) {
@@ -61,7 +66,7 @@ func day06_get_path(input []string, point Point, dir Point) map[Point]int {
 		}
 		if input[next.row][next.col] != '#' {
 			point = next
-			visited[point]++
+			visited[point] = true
 		} else {
 			dir.TurnRight()
 		}
