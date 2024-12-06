@@ -47,6 +47,14 @@ func (point *Point) Add(other Point) Point {
 	return Point{point.row + other.row, point.col + other.col}
 }
 
+func (point *Point) TurnLeft() {
+	*point = Point{-point.col, point.row}
+}
+
+func (point *Point) TurnRight() {
+	*point = Point{point.col, -point.row}
+}
+
 func FindInGrid(grid []string, char byte) Point {
 	for row, line := range grid {
 		for col, c := range line {
