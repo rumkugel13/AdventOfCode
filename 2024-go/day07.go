@@ -43,14 +43,16 @@ func day07_valid_equation(testValue int, nums []int, part2 bool) int {
 }
 
 func day07_equation(testValue int, nums []int, part2 bool) []int {
-	result := []int{}
 	if len(nums) == 1 {
-		result = append(result, nums[0])
-		return result
+		return nums
 	}
 
+	result := []int{}
 	next := day07_equation(testValue, nums[:len(nums)-1], part2)
 	for _, n := range next {
+		if n > testValue {
+			continue
+		}
 		result = append(result, n+nums[len(nums)-1])
 		result = append(result, n*nums[len(nums)-1])
 		if part2 {
