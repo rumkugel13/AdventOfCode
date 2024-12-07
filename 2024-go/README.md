@@ -8,3 +8,7 @@ Solutions to [Advent of Code 2024](https://adventofcode.com/2024) in Go.
 | 1 | ✅ | ✅ |
 | 2 | ✅ | ✅ |
 | 3 | ✅ | ✅ |
+| 4 | ✅ | ✅ |
+| 5 | ✅ | ✅ |
+| 6 | ✅ | ✅ |
+| 7 | ✅ | ✅ |
