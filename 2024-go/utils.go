@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -47,6 +48,10 @@ func (point *Point) Add(other Point) Point {
 	return Point{point.row + other.row, point.col + other.col}
 }
 
+func (point *Point) Sub(other Point) Point {
+	return Point{point.row - other.row, point.col - other.col}
+}
+
 func (point *Point) TurnLeft() {
 	*point = Point{-point.col, point.row}
 }
@@ -64,6 +69,18 @@ func FindInGrid(grid []string, char byte) Point {
 		}
 	}
 	return Point{-1, -1}
+}
+
+func POIsInGrid(grid []string, except []byte) []Point {
+	pois := []Point{}
+	for row, line := range grid {
+		for col, c := range line {
+			if !slices.Contains(except, byte(c)) {
+				pois = append(pois, Point{row, col})
+			}
+		}
+	}
+	return pois
 }
 
 func Distance(start, end Point) int {
