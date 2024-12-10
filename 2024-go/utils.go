@@ -16,6 +16,17 @@ var (
 	}
 )
 
+func Neighbors(grid []string, pos Point) []Point {
+	neighbors := []Point{}
+	for _, dir := range Directions {
+		neighbor := pos.Add(dir)
+		if InsideGrid(grid, neighbor) {
+			neighbors = append(neighbors, neighbor)
+		}
+	}
+	return neighbors
+}
+
 func ReadLines(file string) []string {
 	data, err := os.ReadFile(file)
 	if err != nil {
@@ -71,6 +82,18 @@ func FindInGrid(grid []string, char byte) Point {
 	return Point{-1, -1}
 }
 
+func FindAllInGrid(grid []string, char byte) []Point {
+	pois := []Point{}
+	for row, line := range grid {
+		for col, c := range line {
+			if c == rune(char) {
+				pois = append(pois, Point{row, col})
+			}
+		}
+	}
+	return pois
+}
+
 func POIsInGrid(grid []string, except []byte) []Point {
 	pois := []Point{}
 	for row, line := range grid {
@@ -89,6 +112,10 @@ func Distance(start, end Point) int {
 
 func InsideGrid(grid []string, pos Point) bool {
 	return pos.col >= 0 && pos.col < len(grid[0]) && pos.row >= 0 && pos.row < len(grid)
+}
+
+func GridValue(grid []string, pos Point) int {
+	return int(grid[pos.row][pos.col] - '0')
 }
 
 func Duplicate[T any](grid [][]T) [][]T {
