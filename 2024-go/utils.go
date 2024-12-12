@@ -14,9 +14,14 @@ var (
 		{0, -1},
 		{-1, 0},
 	}
+
+	Up    = Point{-1, 0}
+	Down  = Point{1, 0}
+	Left  = Point{0, -1}
+	Right = Point{0, 1}
 )
 
-func Neighbors(grid []string, pos Point) []Point {
+func NeighborsInGrid(grid []string, pos Point) []Point {
 	neighbors := []Point{}
 	for _, dir := range Directions {
 		neighbor := pos.Add(dir)
@@ -25,6 +30,25 @@ func Neighbors(grid []string, pos Point) []Point {
 		}
 	}
 	return neighbors
+}
+
+func Neighbors(pos Point) []Point {
+	neighbors := []Point{}
+	for _, dir := range Directions {
+		neighbor := pos.Add(dir)
+		neighbors = append(neighbors, neighbor)
+	}
+	return neighbors
+}
+
+func Corners(pos Point) []Point {
+	corners := []Point{
+		pos.Add(Point{0, 0}),
+		pos.Add(Point{0, 1}),
+		pos.Add(Point{1, 0}),
+		pos.Add(Point{1, 1}),
+	}
+	return corners
 }
 
 func ReadLines(file string) []string {
@@ -116,6 +140,10 @@ func InsideGrid(grid []string, pos Point) bool {
 
 func GridValue(grid []string, pos Point) int {
 	return int(grid[pos.row][pos.col] - '0')
+}
+
+func GridChar(grid []string, pos Point) byte {
+	return grid[pos.row][pos.col]
 }
 
 func Duplicate[T any](grid [][]T) [][]T {

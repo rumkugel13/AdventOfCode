@@ -41,7 +41,7 @@ func day10_count_distinct(grid []string, trailhead Point) int {
 			continue
 		}
 
-		for _, neighbor := range Neighbors(grid, current) {
+		for _, neighbor := range NeighborsInGrid(grid, current) {
 			if GridValue(grid, neighbor) == height+1 {
 				queue = append(queue, neighbor)
 			}
@@ -65,7 +65,7 @@ func day10_count_paths(grid []string, trailhead Point) int {
 			continue
 		}
 
-		for _, neighbor := range Neighbors(grid, current) {
+		for _, neighbor := range NeighborsInGrid(grid, current) {
 			if _, ok := visited[neighbor]; !ok && GridValue(grid, neighbor) == height+1 {
 				visited[neighbor] = true
 				queue = append(queue, neighbor)
