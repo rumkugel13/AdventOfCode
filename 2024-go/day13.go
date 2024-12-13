@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -43,26 +42,27 @@ func day13() {
 }
 
 func day13_tokens(machine Machine, offset int) int {
-	a11 := float64(machine.ButtonA.col)
-	a12 := float64(machine.ButtonB.col)
-	a21 := float64(machine.ButtonA.row)
-	a22 := float64(machine.ButtonB.row)
-	n1 := float64(machine.Prize.col + offset)
-	n2 := float64(machine.Prize.row + offset)
+	a11 := machine.ButtonA.col
+	a12 := machine.ButtonB.col
+	a21 := machine.ButtonA.row
+	a22 := machine.ButtonB.row
+	n1 := machine.Prize.col + offset
+	n2 := machine.Prize.row + offset
 
 	determinant := a11*a22 - a12*a21
 	if determinant == 0 {
 		return 0
 	}
 
-	a := (n1*a22 - a12*n2) / determinant
-	b := (n2*a11 - a21*n1) / determinant
+	anum, bnum := (n1*a22 - a12*n2), (n2*a11 - a21*n1)
+	a, arem := anum/determinant, anum%determinant
+	b, brem := bnum/determinant, bnum%determinant
 
-	if math.Floor(a) != a || math.Floor(b) != b {
+	if arem != 0 || brem != 0 {
 		return 0
 	}
 
-	return int(a*3 + b)
+	return a*3 + b
 }
 
 func day13_parse_machines(input []string) []Machine {
