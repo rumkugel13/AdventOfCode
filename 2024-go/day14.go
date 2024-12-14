@@ -35,21 +35,18 @@ func day14() {
 	fmt.Println("Day 14 Part 01:", safetyFactor)
 
 	robots = day14_parse_robots(input)
-	i := 0
-	for {
-		longestLine := day14_longest_line(robots, width, height)
-		if longestLine > width/4 {
-			// day14_print(robots, width, height)
-			break
-		}
-		i++
+	minSeconds := 0
+	longestLine := day14_longest_line(robots, width, height)
+	// width/4 is arbitrary limit to find tree
+	for ; longestLine < width/4; minSeconds++ {
 		for j, robot := range robots {
 			robots[j].pos.col = Mod((robot.pos.col + robot.vel.col), width)
 			robots[j].pos.row = Mod((robot.pos.row + robot.vel.row), height)
 		}
+		longestLine = day14_longest_line(robots, width, height)
 	}
 
-	fmt.Println("Day 14 Part 02:", i)
+	fmt.Println("Day 14 Part 02:", minSeconds)
 }
 
 func day14_longest_line(robots []Robot, width, height int) int {
