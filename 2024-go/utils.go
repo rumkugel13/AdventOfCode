@@ -106,6 +106,17 @@ func FindInGrid(grid []string, char byte) Point {
 	return Point{-1, -1}
 }
 
+func FindInCharGrid(grid [][]byte, char byte) Point {
+	for row, line := range grid {
+		for col, c := range line {
+			if c == char {
+				return Point{row, col}
+			}
+		}
+	}
+	return Point{-1, -1}
+}
+
 func FindAllInGrid(grid []string, char byte) []Point {
 	pois := []Point{}
 	for row, line := range grid {
