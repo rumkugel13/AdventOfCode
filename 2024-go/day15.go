@@ -16,6 +16,42 @@ func day15() {
 	// 	"<^^>>>vv<v>>v<<",
 	// }
 
+	// sample2 := []string{
+	// 	"##########",
+	// 	"#..O..O.O#",
+	// 	"#......O.#",
+	// 	"#.OO..O.O#",
+	// 	"#..O@..O.#",
+	// 	"#O#..O...#",
+	// 	"#O..O..O.#",
+	// 	"#.OO.O.OO#",
+	// 	"#....O...#",
+	// 	"##########",
+	// 	"",
+	// 	"<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^",
+	// 	"vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v",
+	// 	"><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<",
+	// 	"<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^",
+	// 	"^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><",
+	// 	"^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^",
+	// 	">^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^",
+	// 	"<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>",
+	// 	"^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>",
+	// 	"v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^",
+	// }
+
+	// sample3 := []string{
+	// 	"#######",
+	// 	"#...#.#",
+	// 	"#.....#",
+	// 	"#..OO@#",
+	// 	"#..O..#",
+	// 	"#.....#",
+	// 	"#######",
+	// 	"",
+	// 	"<vv<<^^<<^^",
+	// }
+
 	input := ReadLines("input/day15.txt")
 	grid := day15_parse_grid(input)
 	moves := day15_parse_moves(input)
@@ -29,10 +65,17 @@ func day15() {
 
 	fmt.Println("Day 15 Part 01:", result)
 
-	grid = day15_grid_stretch(grid)
+	grid = day15_grid_stretch(day15_parse_grid(input))
 	robot = FindInCharGrid(grid, '@')
+	for _, move := range moves {
+		if day15_can_move2(grid, robot, byte(move)) {
+			day15_move2(grid, robot, byte(move))
+			robot = day15_next(robot, byte(move))
+		}
+	}
+	result = day15_gps_sum(grid)
 
-	fmt.Println("Day 15 Part 02:", "Not implemented yet")
+	fmt.Println("Day 15 Part 02:", result)
 }
 
 func day15_grid_stretch(grid [][]byte) [][]byte {
@@ -66,6 +109,47 @@ func day15_gps_sum(grid [][]byte) int {
 		}
 	}
 	return sum
+}
+
+func day15_move2(grid [][]byte, object Point, move byte) {
+	next := day15_next(object, move)
+	if grid[next.row][next.col] == '.' {
+		CharGridSwap(grid, object, next)
+	} else if (move == '^' || move == 'v') && grid[next.row][next.col] == '[' {
+		nextRight := next.Add(Right)
+		day15_move2(grid, next, move)
+		day15_move2(grid, nextRight, move)
+		CharGridSwap(grid, object, next)
+	} else if (move == '^' || move == 'v') && grid[next.row][next.col] == ']' {
+		nextLeft := next.Add(Left)
+		day15_move2(grid, next, move)
+		day15_move2(grid, nextLeft, move)
+		CharGridSwap(grid, object, next)
+	} else if grid[next.row][next.col] != '#' {
+		day15_move2(grid, next, move)
+		CharGridSwap(grid, object, next)
+	}
+}
+
+func day15_can_move2(grid [][]byte, object Point, move byte) bool {
+	next := day15_next(object, move)
+	if grid[next.row][next.col] == '.' {
+		return true
+	}
+	if grid[next.row][next.col] == '#' {
+		return false
+	}
+	if move == '^' || move == 'v' {
+		if grid[next.row][next.col] == '[' {
+			right := next.Add(Right)
+			return day15_can_move2(grid, next, move) && day15_can_move2(grid, right, move)
+		}
+		if grid[next.row][next.col] == ']' {
+			left := next.Add(Left)
+			return day15_can_move2(grid, next, move) && day15_can_move2(grid, left, move)
+		}
+	}
+	return day15_can_move2(grid, next, move)
 }
 
 func day15_move(grid [][]byte, object Point, move byte) bool {
