@@ -19,7 +19,10 @@ func day15() {
 	input := ReadLines("input/day15.txt")
 	grid := day15_grid(input)
 	moves := day15_moves(input)
-	grid = day15_move(grid, moves)
+	robot := FindInCharGrid(grid, '@')
+	for _, move := range moves {
+		day15_move(grid, &robot, byte(move))
+	}
 	result := day15_gps_sum(grid)
 
 	fmt.Println("Day 15 Part 01:", result)
@@ -62,26 +65,22 @@ func day15_gps_sum(grid [][]byte) int {
 	return sum
 }
 
-func day15_move(grid [][]byte, moves string) [][]byte {
-	point := FindInCharGrid(grid, '@')
-	for _, move := range moves {
-		if day15_can_push(grid, point, byte(move)) {
-			currentChar := grid[point.row][point.col]
-			grid[point.row][point.col] = '.'
+func day15_move(grid [][]byte, robot *Point, move byte) {
+	if day15_can_push(grid, *robot, move) {
+		currentChar := grid[robot.row][robot.col]
+		grid[robot.row][robot.col] = '.'
 
-			next := day15_next(point, byte(move))
-			for grid[next.row][next.col] != '.' {
-				nextChar := grid[next.row][next.col]
-				grid[next.row][next.col] = currentChar
-				next = day15_next(next, byte(move))
-				currentChar = nextChar
-			}
+		next := day15_next(*robot, move)
+		for grid[next.row][next.col] != '.' {
+			nextChar := grid[next.row][next.col]
 			grid[next.row][next.col] = currentChar
-			point = day15_next(point, byte(move))
+			next = day15_next(next, move)
+			currentChar = nextChar
 		}
-		// day15_print(grid)
+		grid[next.row][next.col] = currentChar
+		*robot = day15_next(*robot, move)
 	}
-	return grid
+	// day15_print(grid)
 }
 
 func day15_print(grid [][]byte) {
@@ -92,11 +91,14 @@ func day15_print(grid [][]byte) {
 
 func day15_can_push(grid [][]byte, point Point, move byte) bool {
 	next := day15_next(point, move)
-	if grid[next.row][next.col] == 'O' {
-		canPush := day15_can_push(grid, next, move)
-		return canPush
+	for grid[next.row][next.col] != '#' {
+		if grid[next.row][next.col] == '.' {
+			return true
+		}
+		next = day15_next(next, move)
 	}
-	return grid[next.row][next.col] == '.'
+
+	return false
 }
 
 func day15_next(point Point, move byte) Point {
