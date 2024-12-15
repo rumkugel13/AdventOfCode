@@ -17,17 +17,20 @@ func day15() {
 	// }
 
 	input := ReadLines("input/day15.txt")
-	grid := day15_grid(input)
-	moves := day15_moves(input)
+	grid := day15_parse_grid(input)
+	moves := day15_parse_moves(input)
 	robot := FindInCharGrid(grid, '@')
 	for _, move := range moves {
-		day15_move(grid, &robot, byte(move))
+		if day15_move(grid, robot, byte(move)) {
+			robot = day15_next(robot, byte(move))
+		}
 	}
 	result := day15_gps_sum(grid)
 
 	fmt.Println("Day 15 Part 01:", result)
 
 	grid = day15_grid_stretch(grid)
+	robot = FindInCharGrid(grid, '@')
 
 	fmt.Println("Day 15 Part 02:", "Not implemented yet")
 }
@@ -57,7 +60,7 @@ func day15_gps_sum(grid [][]byte) int {
 	sum := 0
 	for r, row := range grid {
 		for c, cell := range row {
-			if cell == 'O' {
+			if cell == 'O' || cell == '[' {
 				sum += r*100 + c
 			}
 		}
@@ -65,40 +68,19 @@ func day15_gps_sum(grid [][]byte) int {
 	return sum
 }
 
-func day15_move(grid [][]byte, robot *Point, move byte) {
-	if day15_can_push(grid, *robot, move) {
-		currentChar := grid[robot.row][robot.col]
-		grid[robot.row][robot.col] = '.'
-
-		next := day15_next(*robot, move)
-		for grid[next.row][next.col] != '.' {
-			nextChar := grid[next.row][next.col]
-			grid[next.row][next.col] = currentChar
-			next = day15_next(next, move)
-			currentChar = nextChar
-		}
-		grid[next.row][next.col] = currentChar
-		*robot = day15_next(*robot, move)
+func day15_move(grid [][]byte, object Point, move byte) bool {
+	next := day15_next(object, move)
+	if grid[next.row][next.col] == '.' || (grid[next.row][next.col] == 'O' && day15_move(grid, next, move)) {
+		CharGridSwap(grid, object, next)
+		return true
 	}
-	// day15_print(grid)
+	return false
 }
 
 func day15_print(grid [][]byte) {
 	for _, row := range grid {
 		fmt.Println(string(row))
 	}
-}
-
-func day15_can_push(grid [][]byte, point Point, move byte) bool {
-	next := day15_next(point, move)
-	for grid[next.row][next.col] != '#' {
-		if grid[next.row][next.col] == '.' {
-			return true
-		}
-		next = day15_next(next, move)
-	}
-
-	return false
 }
 
 func day15_next(point Point, move byte) Point {
@@ -116,7 +98,7 @@ func day15_next(point Point, move byte) Point {
 	return next
 }
 
-func day15_moves(input []string) string {
+func day15_parse_moves(input []string) string {
 	moves := ""
 	add := false
 	for _, line := range input {
@@ -129,7 +111,7 @@ func day15_moves(input []string) string {
 	return moves
 }
 
-func day15_grid(input []string) [][]byte {
+func day15_parse_grid(input []string) [][]byte {
 	grid := [][]byte{}
 	for _, line := range input {
 		if line == "" {

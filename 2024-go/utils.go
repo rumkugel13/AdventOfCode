@@ -157,6 +157,10 @@ func GridChar(grid []string, pos Point) byte {
 	return grid[pos.row][pos.col]
 }
 
+func CharGridSwap(grid [][]byte, a, b Point) {
+	grid[a.row][a.col], grid[b.row][b.col] = grid[b.row][b.col], grid[a.row][a.col]
+}
+
 func Duplicate[T any](grid [][]T) [][]T {
 	duplicate := make([][]T, len(grid))
 	for i := range grid {
