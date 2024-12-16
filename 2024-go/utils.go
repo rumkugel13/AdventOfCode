@@ -21,6 +21,10 @@ var (
 	Right = Point{0, 1}
 )
 
+func OppositeDir(dir Point) Point {
+	return Point{-dir.row, -dir.col}
+}
+
 func NeighborsInGrid(grid []string, pos Point) []Point {
 	neighbors := []Point{}
 	for _, dir := range Directions {
@@ -85,6 +89,14 @@ func (point *Point) Add(other Point) Point {
 
 func (point *Point) Sub(other Point) Point {
 	return Point{point.row - other.row, point.col - other.col}
+}
+
+func (point Point) Left() Point {
+	return Point{-point.col, point.row}
+}
+
+func (point Point) Right() Point {
+	return Point{point.col, -point.row}
 }
 
 func (point *Point) TurnLeft() {
