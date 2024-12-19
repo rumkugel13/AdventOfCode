@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	// "slices"
 	"strconv"
 	"strings"
 )
@@ -30,6 +31,37 @@ func day17() {
 	}
 
 	fmt.Println("Day 17 Part 01:", result)
+
+	// computer = day17_parse_computer(input)
+	// var result2 int
+	// // cycles := make([]int, len(computer.prog))
+	// inc := 1
+	// count := 1
+	// prevLen := 0
+	// for i := 0; ; i += inc {
+	// 	computer.pc = 0
+	// 	computer.regs["A"] = i
+	// 	computer.regs["B"] = 0
+	// 	computer.regs["C"] = 0
+	// 	computer.out = []int{}
+	// 	day17_run_computer(&computer)
+
+	// 	if len(computer.out) > prevLen {
+	// 		inc = LCM(count, inc)
+	// 		count = 0
+	// 		prevLen = len(computer.out)
+	// 	}
+	// 	count++
+		
+	// 	fmt.Println(i, computer.out)
+
+	// 	if slices.Compare(computer.prog, computer.out) == 0 {
+	// 		result2 = i
+	// 		break
+	// 	}
+	// }
+
+	fmt.Println("Day 17 Part 02:", "Not implemented yet")
 }
 
 func day17_run_computer(computer *Computer) {
