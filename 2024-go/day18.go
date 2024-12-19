@@ -47,12 +47,21 @@ func day18() {
 	fmt.Println("Day 18 Part 01:", steps)
 
 	var blocker Point
-	for _, point := range points[fallen:] {
-		grid[point.row][point.col] = '#'
+	left, right := 0, len(points)-1
+	for left <= right {
+		mid := (left + right) / 2
+
+		grid = day18_grid(width, height)
+		for _, point := range points[:mid+1] {
+			grid[point.row][point.col] = '#'
+		}
+
 		steps = day18_minimum_steps(grid, start, end)
 		if steps == -1 {
-			blocker = point
-			break
+			blocker = points[mid]
+			right = mid - 1
+		} else {
+			left = mid + 1
 		}
 	}
 	result := strconv.Itoa(blocker.col) + "," + strconv.Itoa(blocker.row)
