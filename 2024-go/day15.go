@@ -161,12 +161,6 @@ func day15_move(grid [][]byte, object Point, move byte) bool {
 	return false
 }
 
-func day15_print(grid [][]byte) {
-	for _, row := range grid {
-		fmt.Println(string(row))
-	}
-}
-
 func day15_next(point Point, move byte) Point {
 	var next Point
 	switch move {

@@ -52,7 +52,7 @@ func day17() {
 	// 		prevLen = len(computer.out)
 	// 	}
 	// 	count++
-		
+
 	// 	fmt.Println(i, computer.out)
 
 	// 	if slices.Compare(computer.prog, computer.out) == 0 {
@@ -71,7 +71,7 @@ func day17_run_computer(computer *Computer) {
 		comboRegister := 'A' + operand - 4
 		comboOperand := operand
 		if comboRegister >= 'A' && comboRegister <= 'C' {
-			comboOperand = computer.regs[string(comboRegister)]
+			comboOperand = computer.regs[string(byte(comboRegister))]
 		}
 
 		switch instruction {
