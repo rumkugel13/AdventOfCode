@@ -21,16 +21,42 @@ func day19() {
 	input := ReadLines("input/day19.txt")
 	patterns, designs := day19_parse(input)
 
-	possible := 0
+	possible := []string{}
 	for _, design := range designs {
 		if day19_match(patterns, design) {
-			possible++
+			possible = append(possible, design)
 		}
 	}
 
-	fmt.Println("Day 19 Part 01:", possible)
+	fmt.Println("Day 19 Part 01:", len(possible))
 
-	fmt.Println("Day 19 Part 02:", "Not implemented yet")
+	count := 0
+	for _, design := range possible {
+		count += day19_count_combinations(patterns, design, make(map[string]int))
+	}
+
+	fmt.Println("Day 19 Part 02:", count)
+}
+
+func day19_count_combinations(patterns []string, design string, cache map[string]int) int {
+	if design == "" {
+		return 1
+	}
+	if count, exists := cache[design]; exists {
+		return count
+	}
+
+	total := 0
+	for _, pattern := range patterns {
+		if len(pattern) > len(design) {
+			continue
+		}
+		if pattern == design[:len(pattern)] {
+			total += day19_count_combinations(patterns, design[len(pattern):], cache)
+		}
+	}
+	cache[design] = total
+	return total
 }
 
 func day19_match(patterns []string, design string) bool {
