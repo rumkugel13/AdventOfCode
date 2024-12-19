@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	// "slices"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -32,36 +32,42 @@ func day17() {
 
 	fmt.Println("Day 17 Part 01:", result)
 
-	// computer = day17_parse_computer(input)
-	// var result2 int
-	// // cycles := make([]int, len(computer.prog))
-	// inc := 1
-	// count := 1
-	// prevLen := 0
-	// for i := 0; ; i += inc {
-	// 	computer.pc = 0
-	// 	computer.regs["A"] = i
-	// 	computer.regs["B"] = 0
-	// 	computer.regs["C"] = 0
-	// 	computer.out = []int{}
-	// 	day17_run_computer(&computer)
+	computer = day17_parse_computer(input)
+	possibleInitialValues := map[int]bool{0: true}
 
-	// 	if len(computer.out) > prevLen {
-	// 		inc = LCM(count, inc)
-	// 		count = 0
-	// 		prevLen = len(computer.out)
-	// 	}
-	// 	count++
+	// adapted from https://github.com/derailed-dash/Advent-of-Code/blob/master/src/AoC_2024/Dazbo's_Advent_of_Code_2024.ipynb#Day-17-Part-2
+	for position := len(computer.prog) - 1; position >= 0; position-- {
+		targetInstruction := computer.prog[position]
+		nextPossibleValues := make(map[int]bool)
 
-	// 	fmt.Println(i, computer.out)
+		for currentValue := range possibleInitialValues {
+			shiftedValue := currentValue * 8
 
-	// 	if slices.Compare(computer.prog, computer.out) == 0 {
-	// 		result2 = i
-	// 		break
-	// 	}
-	// }
+			for testValue := shiftedValue; testValue < shiftedValue+8; testValue++ {
+				computer.pc = 0
+				computer.regs["A"] = testValue
+				computer.regs["B"] = 0
+				computer.regs["C"] = 0
+				computer.out = []int{}
+				day17_run_computer(&computer)
 
-	fmt.Println("Day 17 Part 02:", "Not implemented yet")
+				if len(computer.out) > 0 && computer.out[0] == targetInstruction {
+					nextPossibleValues[testValue] = true
+				}
+			}
+		}
+
+		possibleInitialValues = nextPossibleValues
+	}
+
+	minInitialValue := math.MaxInt64
+	for value := range possibleInitialValues {
+		if value < minInitialValue {
+			minInitialValue = value
+		}
+	}
+
+	fmt.Println("Day 17 Part 02:", minInitialValue)
 }
 
 func day17_run_computer(computer *Computer) {
