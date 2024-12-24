@@ -99,6 +99,10 @@ func (point Point) Right() Point {
 	return Point{point.col, -point.row}
 }
 
+func (point Point) Opposite() Point {
+	return Point{-point.row, -point.col}
+}
+
 func (point *Point) TurnLeft() {
 	*point = Point{-point.col, point.row}
 }
